@@ -1,32 +1,32 @@
 version: '3.8'
 services:
-  web:
-    build: .
-    ports:
-      - "6000:5000"
-    volumes:
-      - ./:/app
-    depends_on:
-      - processing
-    environment:
-      - FLASK_ENV=development
+   web:
+     build: .
+     ports:
+       - "6000:5000"
+     volumes:
+       - ./:/app
+     depends_on:
+       - processing
+     environment:
+       - FLASK_ENV=development
 
-  processing:
-    image: openai/whisper
-    container_name: whisper
-    volumes:
-      - ./videos:/videos
-      - ./subtitles:/subtitles
-    command: >
-      bash -c "whisper --model base --task transcribe --language es --output_format vtt --output_dir /subtitles /videos/input.mp4 && 
-      ffmpeg -i /videos/input.mp4 -vf 'subtitles=/subtitles/output.vtt:force_style=Alignment=2,Fontsize=60,PrimaryColour=&H00FFFFFF,BorderStyle=1,BorderColor=&H000000FF' -c:a copy /videos/output_with_subtitles.mp4'"
-    depends_on:
-      - ffmpeg
+   processing:
+     image: openai/whisper
+     container_name: whisper
+     volumes:
+       - ./videos:/videos
+       - ./subtitles:/subtitles
+     command: >
+       bash -c "whisper --model base --task transcribe --language es --output_format vtt --output_dir /subtitles /videos/input.mp4 && 
+       ffmpeg -i /videos/input.mp4 -vf 'subtitles=/subtitles/output.vtt:force_style=Alignment=2,Fontsize=60,PrimaryColour=&H00FFFFFF,BorderStyle=1,BorderColor=&H000000FF' -c:a copy /videos/output_with_subtitles.mp4'"
+     depends_on:
+       - ffmpeg
 
-  ffmpeg:
-    image: ffmpeg:latest
-    container_name: ffmpeg
-    volumes:
-      - ./videos:/videos
-      - ./subtitles:/subtitles
-    command: ["ffmpeg", "-i", "/videos/input.mp4", "-vf", "subtitles=/subtitles/output.vtt:force_style='Alignment=2,Fontsize=60,PrimaryColour=&H00FFFFFF,BorderStyle=1,BorderColor=&H000000FF'", "-c:a", "copy", "/videos/output_with_subtitles.mp4"]
+   ffmpeg:
+     image: lscr.io/linuxserver/ffmpeg:latest
+     container_name: ffmpeg
+     volumes:
+       - ./videos:/videos
+       - ./subtitles:/subtitles
+     command: ["ffmpeg", "-i", "/videos/input.mp4", "-vf", "subtitles=/subtitles/output.vtt:force_style='Alignment=2,Fontsize=60,PrimaryColour=&H00FFFFFF,BorderStyle=1,BorderColor=&H000000FF'", "-c:a", "copy", "/videos/output_with_subtitles.mp4"]
