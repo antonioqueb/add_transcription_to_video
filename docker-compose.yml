@@ -5,7 +5,8 @@ services:
       ports:
         - "6000:5000"
       volumes:
-        - ./:/app
+        - ./videos:/videos
+        - ./subtitles:/subtitles
       depends_on:
         - processing
       environment:
@@ -26,4 +27,6 @@ services:
       volumes:
         - ./videos:/videos
         - ./subtitles:/subtitles
+      depends_on:
+        - processing
       command: ["ffmpeg", "-i", "/videos/input.mp4", "-vf", "subtitles=/subtitles/output.vtt:force_style='Alignment=2,Fontsize=60,PrimaryColour=&H00FFFFFF,BorderStyle=1,BorderColor=&H000000FF'", "-c:a", "copy", "/videos/output_with_subtitles.mp4"]
