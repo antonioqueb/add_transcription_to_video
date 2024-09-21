@@ -11,9 +11,6 @@ RUN apt-get update && \
 # Clonamos el repositorio de Whisper
 RUN git clone https://github.com/openai/whisper.git
 
-# Instalamos las dependencias de Python para Whisper
-COPY requirements.txt .
-
 
 # Instalamos las dependencias de compilación para Whisper
 RUN cd whisper && \
