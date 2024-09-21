@@ -13,11 +13,12 @@ RUN git clone https://github.com/openai/whisper.git
 
 # Instalamos las dependencias de Python para Whisper
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+
 
 # Instalamos las dependencias de compilación para Whisper
 RUN cd whisper && \
-    python setup.py install
+    python setup.py install  && \
+    RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiamos los archivos de configuración o de entrada al contenedor
 COPY . .
