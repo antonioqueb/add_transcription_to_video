@@ -8,18 +8,17 @@ WORKDIR /app
 RUN apt-get update && \
     apt-get install -y git build-essential libssl-dev libffi-dev python3-dev
 
-    # Instalamos numpy
-RUN pip install numpy
-
-
 # Clonamos el repositorio de Whisper
 RUN git clone https://github.com/openai/whisper.git
 
+# Cambiamos al directorio de Whisper
+WORKDIR /app/whisper
+
+# Instalamos las dependencias de Python para Whisper
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Instalamos las dependencias de compilación para Whisper
-RUN cd whisper && \
-    python setup.py install  && \
-    RUN pip install --no-cache-dir -r requirements.txt
+RUN python setup.py install
 
 # Copiamos los archivos de configuración o de entrada al contenedor
 COPY . .
