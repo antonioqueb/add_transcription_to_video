@@ -6,8 +6,6 @@ services:
         - "6000:5000"
       volumes:
         - ./:/app
-        - ./videos:/videos
-        - ./subtitles:/subtitles
       depends_on:
         - processing
       environment:
@@ -16,11 +14,11 @@ services:
     processing:
       build: ./whisper-processing
       container_name: whisper-processing
-      depends_on:
-        - ffmpeg
       volumes:
         - ./videos:/videos
         - ./subtitles:/subtitles
+      depends_on:
+        - ffmpeg
 
     ffmpeg:
       image: lscr.io/linuxserver/ffmpeg:latest

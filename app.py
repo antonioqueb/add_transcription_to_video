@@ -1,4 +1,4 @@
-from flask import Flask, request, send_from_directory, render_template, safe_join
+from flask import Flask, request, send_from_directory, render_template, secure_filename
 
 app = Flask(__name__)
 
@@ -16,7 +16,6 @@ def upload_file():
     if file:
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        # Aquí puedes llamar a un script o función que use docker-compose para procesar el video
         process_video(filename)
         return 'Video uploaded and processed successfully!'
 
