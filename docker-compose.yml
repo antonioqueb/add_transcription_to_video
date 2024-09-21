@@ -1,29 +1,29 @@
 version: '3.8'
 services:
-  web:
-    build: .
-    ports:
-      - "6000:5000"
-    volumes:
-      - ./:/app
-    depends_on:
-      - processing
-    environment:
-      - FLASK_ENV=development
+   web:
+     build: .
+     ports:
+       - "6000:5000"
+     volumes:
+       - ./:/app
+     depends_on:
+       - processing
+     environment:
+       - FLASK_ENV=development
 
-  processing:
-    build: ./whisper-processing
-    container_name: whisper-processing
-    volumes:
-      - ./videos:/videos
-      - ./subtitles:/subtitles
-    depends_on:
-      - ffmpeg
+   processing:
+     build: ./whisper-processing
+     container_name: whisper-processing
+     volumes:
+       - ./videos:/videos
+       - ./subtitles:/subtitles
+     depends_on:
+       - ffmpeg
 
-  ffmpeg:
-    image: lscr.io/linuxserver/ffmpeg:latest
-    container_name: ffmpeg
-    volumes:
-      - ./videos:/videos
-      - ./subtitles:/subtitles
-    command: ["ffmpeg", "-i", "/videos/input.mp4", "-vf", "subtitles=/subtitles/output.vtt:force_style='Alignment=2,Fontsize=60,PrimaryColour=&H00FFFFFF,BorderStyle=1,BorderColor=&H000000FF'", "-c:a", "copy", "/videos/output_with_subtitles.mp4"]
+   ffmpeg:
+     image: lscr.io/linuxserver/ffmpeg:latest
+     container_name: ffmpeg
+     volumes:
+       - ./videos:/videos
+       - ./subtitles:/subtitles
+     command: ["ffmpeg", "-i", "/videos/input.mp4", "-vf", "subtitles=/subtitles/output.vtt:force_style='Alignment=2,Fontsize=60,PrimaryColour=&H00FFFFFF,BorderStyle=1,BorderColor=&H000000FF'", "-c:a", "copy", "/videos/output_with_subtitles.mp4"]
